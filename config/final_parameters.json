@@ -1,0 +1,80 @@
+{
+  "model_version": "3.0-variable-impedance",
+  "subject": {
+    "dog_id": "G",
+    "breed": "Labrador Retriever",
+    "body_mass_kg": 30.0
+  },
+  "mechanical_parameters": {
+    "body_mass_kg": 30.0,
+    "paw_length_m": 0.323330636911959,
+    "paw_mass_kg": 0.21,
+    "paw_com_fraction": 0.47,
+    "paw_I_cm_kg_m2": 0.000609,
+    "gravity_m_s2": 9.81,
+    "contact_damping_N_s_m": 500.0,
+    "cop_fraction_paw": 0.22,
+    "torque_limit_Nm_per_kg": 0.45,
+    "tau_k_s": 0.045,
+    "tau_b_s": 0.045,
+    "tau_theta_eq_s": 0.025,
+    "tau_k_paw_s": 0.07,
+    "theta_eq_rate_limit_rad_s": 12.0
+  },
+  "static_single_device": {
+    "k_hock": 119.16628141129041,
+    "b_hock": 0.9542359521201728,
+    "theta_eq": -2.1888180060319886,
+    "k_paw": 8000.0
+  },
+  "static_gait_specific": {
+    "walk": {
+      "k_hock": 111.2031398072494,
+      "b_hock": 1.35,
+      "theta_eq": -2.2852474472046755,
+      "k_paw": 8000.0
+    },
+    "trot": {
+      "k_hock": 137.5098708314,
+      "b_hock": 1.35,
+      "theta_eq": -2.0645978967113185,
+      "k_paw": 33254.01899955078
+    }
+  },
+  "adaptive_parameters": {
+    "walk": {
+      "k_stance": 108.92174204101391,
+      "k_swing": 104.13684649224797,
+      "zeta_stance": 1.0932146929063158,
+      "zeta_swing": 0.5002301605563086,
+      "theta_scale": 1.037043867703074,
+      "feedforward_gain": 0.8691406431290687,
+      "compression_target_m": 0.011887385300051331,
+      "lead_fraction": 0.03486973474919389,
+      "k_paw_preload": 15000.0
+    },
+    "trot": {
+      "k_stance": 137.03947784152604,
+      "k_swing": 137.5098708314,
+      "zeta_stance": 0.45111792279415275,
+      "zeta_swing": 0.25,
+      "theta_scale": 0.8632510659358595,
+      "feedforward_gain": 0.798596971535358,
+      "compression_target_m": 0.018,
+      "lead_fraction": 0.05334382646599392,
+      "k_paw_preload": 15000.0
+    }
+  },
+  "controller": {
+    "type": "phase-continuous computed-equilibrium variable impedance",
+    "equation": "tau = -K(phi)*(theta-theta_eq(phi)) - B(phi)*theta_dot",
+    "controlled_terms": [
+      "K",
+      "B",
+      "theta_eq",
+      "k_paw"
+    ],
+    "actuator_lags_included": true,
+    "torque_saturation_included": true
+  }
+}
