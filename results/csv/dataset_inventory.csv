@@ -1,0 +1,6 @@
+source,role,records,notes
+Kinematic_Targets_101,Dog G mean reference and held-out stride validation,7575,Processed from uploaded MAT motion files
+Kinematic_Stride_Summary,population plausibility ranges,75,6 dogs; 2 gait types
+DogG_personalized_reference,controller design target,202,7 walk and 6 trot strides
+phase_timing_error_summary,sensor-delay robustness,4,Observed phase-start timing error
+four_state_classification_report,deployment context only,7,Not used as proof of a trained raw IMU+FSR CNN
