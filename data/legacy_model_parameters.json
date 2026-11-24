@@ -1,0 +1,133 @@
+{
+  "project": {
+    "name": "Personalized vision-driven adaptive canine below-knee prosthesis \u2014 Dog G",
+    "model_version": "personalized-dogG-v1.0",
+    "model_type": "2D sagittal nonlinear hybrid time-domain forward dynamics; vision-driven proximal motion, dynamic paw-compression DOF, literature-calibrated stance loading, and finite stiffness-actuator dynamics",
+    "reference_frame": "subject-specific knee-centered coordinates from Dog G vision trajectories"
+  },
+  "reference_dog": {
+    "dog_id": "G",
+    "breed": "Labrador Retriever",
+    "age_years": 8.0,
+    "body_mass_kg": 30.0,
+    "withers_height_m": 0.53,
+    "source": "Catavitello 2015 DogG.mat / processed subject-specific kinematics"
+  },
+  "geometry": {
+    "shank_length_m": 0.2811534046215378,
+    "paw_length_hock_to_toe_m": 0.32333063691195907,
+    "shank_length_over_withers_height": 0.5304781219274298,
+    "paw_length_over_withers_height": 0.6100578054942624,
+    "paw_to_shank_length_ratio": 1.1500150152803459,
+    "source": "Dog G median per-stride marker geometry from the processed Catavitello trajectories",
+    "sensitivity_fraction": 0.1
+  },
+  "segment_inertia_proxy": {
+    "shank_mass_kg": 0.423,
+    "shank_com_fraction_from_knee": 0.31,
+    "shank_I_cm_kg_m2": 0.001299,
+    "paw_mass_kg": 0.21,
+    "paw_com_fraction_from_hock": 0.47,
+    "paw_I_cm_kg_m2": 0.000609,
+    "source": "Ragetly normalized Labrador segment-property proxies scaled to Dog G body mass; not CAD mass properties",
+    "sensitivity_fraction": 0.2
+  },
+  "spring_damper": {
+    "hock_neutral_angle_deg": -125.51462264107411,
+    "hock_damping_Nm_s_per_rad": 0.06,
+    "paw_contact_damping_N_s_per_m": 500.0,
+    "gravity_m_s2": 9.81,
+    "notes": "Neutral hock angle derived directly from Dog G stance kinematics; damping remains fixed engineering initialization."
+  },
+  "stiffness_bounds": {
+    "k_calf_Nm_per_rad": [
+      1.0,
+      137.5098708313976
+    ],
+    "k_paw_N_per_m": [
+      1000.0,
+      200000.0
+    ],
+    "basis": "Subject-scaled compliant design space for Dog G. k_calf upper bound scales with body mass under the same 5-degree flexibility criterion; k_paw remains broad effective prosthetic compliance.",
+    "warning": "Preliminary results reach the current 10 kN/m lower bound for k_paw in the global static baseline and trot adaptive case. These are not final stiffness values; add loading/GRF constraints before thesis-level calibration."
+  },
+  "actuator_dynamics": {
+    "tau_k_calf_s": 0.04,
+    "tau_k_paw_s": 0.04,
+    "notes": "Fixed first-order stiffness-transition dynamics. Replace with measured hardware response time when an actuator/mechanism is selected."
+  },
+  "default_policies": {
+    "static": {
+      "k_calf_Nm_per_rad": 5.0,
+      "k_paw_N_per_m": 20000.0
+    },
+    "adaptive_walk": {
+      "k_calf_stance_Nm_per_rad": 5.0,
+      "k_calf_swing_Nm_per_rad": 5.0,
+      "k_paw_stance_N_per_m": 20000.0
+    },
+    "adaptive_trot": {
+      "k_calf_stance_Nm_per_rad": 5.0,
+      "k_calf_swing_Nm_per_rad": 5.0,
+      "k_paw_stance_N_per_m": 20000.0
+    }
+  },
+  "simulation": {
+    "settling_cycles": 1,
+    "evaluation_cycles": 1,
+    "samples_per_cycle": 161,
+    "steps_per_cycle": 120,
+    "integrator": "fixed-step RK4",
+    "notes": "Optimization uses 180 RK4 steps/cycle; final reporting is rerun at 600 steps/cycle."
+  },
+  "objective_weights": {
+    "hock_angle": 0.25,
+    "toe_position": 0.2,
+    "toe_velocity": 0.1,
+    "toe_acceleration": 0.05,
+    "peak_grf": 0.16,
+    "vertical_impulse": 0.16,
+    "compression_penalty": 0.04,
+    "hock_moment_penalty": 0.04
+  },
+  "contact_plausibility": {
+    "soft_max_compression_m": 0.025,
+    "soft_max_hock_vertical_offset_m": 0.025,
+    "notes": "Soft plausibility limits for reduced-order compliance states; these are not measured biological limits."
+  },
+  "load_bearing_support": {
+    "method": "For each gait, derive a fixed support-mass fraction and a fixed acceleration gain so the ideal stance load-demand profile matches BOTH the independent published pelvic-limb peak vertical force and vertical impulse.",
+    "notes": "The load-demand profile uses the shape of the vision-derived hock vertical acceleration, but its peak and mean are calibrated to independent GRF literature. These load parameters are fixed and are not optimization variables."
+  },
+  "grf_targets": {
+    "walk": {
+      "peak_vertical_force_BW": 0.3866,
+      "vertical_impulse_BW_s": 0.1396,
+      "source": "Torres et al./Vet Comp Orthop Traumatol walking force-platform study in heterogeneous orthopedically normal dogs: mean pelvic PVF 38.66% BW and VI 13.96 %BW*s at preferred relative walking velocity.",
+      "population_note": "17 orthopedically normal heterogeneous dogs; normalized values are used as population-level load constraints, not synchronized measurements for the vision dogs."
+    },
+    "trot": {
+      "peak_vertical_force_BW": 0.645,
+      "vertical_impulse_BW_s": 0.091,
+      "source": "Ragetly et al. 2010 healthy Labrador pelvic limbs at trot: PVF 6.32 N/kg = 64.5% BW, VI 0.89 Ns/kg = 9.1 %BW*s.",
+      "population_note": "Healthy Labrador retrievers at ~1.98 m/s; normalized values are used as population-level load constraints."
+    }
+  },
+  "contact_geometry": {
+    "cop_fraction_paw": 0.4,
+    "basis": "Fixed reduced-order center-of-pressure lever arm. The resultant vertical ground reaction is applied at 40% of the hock-to-toe length rather than at the toe tip. This avoids the unrealistically large hock moment created by a full-toe lever arm. It is an engineering proxy, not a measured COP location.",
+    "sensitivity_fraction": 0.15
+  },
+  "hock_moment_plausibility": {
+    "soft_upper_peak_Nm_per_kg": 0.65,
+    "basis": "Conservative soft upper envelope for healthy canine tarsal/hock net moment at trot. It is used only as a soft plausibility penalty, not as a point target."
+  },
+  "flexibility_constraint": {
+    "representative_tarsal_moment_Nm_per_kg": 0.4,
+    "reference_body_mass_kg": 30.0,
+    "representative_peak_torque_Nm": 12.0,
+    "minimum_elastic_deflection_deg": 5.0,
+    "derived_k_calf_upper_bound_Nm_per_rad": 137.5098708313976,
+    "interpretation": "Engineering design constraint for a flexible prosthesis; not biological stiffness."
+  }
+}
