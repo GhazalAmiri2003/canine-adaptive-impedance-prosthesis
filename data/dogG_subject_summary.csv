@@ -1,0 +1,3 @@
+dog_id,breed,age_years,body_mass_kg,withers_height_m,gait_type,n_strides,median_stride_duration_s,median_stance_percent,shank_length_m_fixed,paw_hock_to_toe_length_m_fixed
+G,Labrador Retriever,8,30.0,0.53,walk,7,0.6833333333333333,60.46511627906977,0.2811534046215378,0.32333063691195907
+G,Labrador Retriever,8,30.0,0.53,trot,6,0.4083333333333333,34.05797101449275,0.2811534046215378,0.32333063691195907
